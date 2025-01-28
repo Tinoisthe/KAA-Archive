@@ -4,36 +4,38 @@ session_start();
 include('db_connection.php'); // Include your database connection file
 
 // Redirect to login if the user is not logged in or not an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['is_admin'] != 1) {
+if (!isset($_SESSION['user_id']) || (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] != 1)) {
     header("Location: login.php");
     exit();
 }
 
 // Fetch current site settings from the database
-$sql = "SELECT * FROM site_settings WHERE id = 1"; // Assume site_settings table has an ID column
+$sql = "SELECT * FROM site_settings WHERE id = 1";
 $stmt = $conn->prepare($sql);
-$stmt->execute();
-$result = $stmt->get_result();
 
+if (!$stmt->execute()) {
+    die("Error fetching site settings: " . $conn->error);
+}
+
+$result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $settings = $result->fetch_assoc();
 } else {
     $error_message = "No site settings found.";
 }
 
-// Handle updating site settings
+// Handle updating the login toggle
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['save_settings'])) {
-        $site_name = $_POST['site_name'];
-        $site_theme = $_POST['site_theme'];
+        $login_enabled = isset($_POST['login_enabled']) ? 1 : 0; // Convert checkbox to boolean value
 
         // Update settings in the database
-        $update_sql = "UPDATE site_settings SET site_name = ?, site_theme = ? WHERE id = 1";
+        $update_sql = "UPDATE site_settings SET login_enabled = ? WHERE id = 1";
         $update_stmt = $conn->prepare($update_sql);
-        $update_stmt->bind_param("ss", $site_name, $site_theme);
-        
+        $update_stmt->bind_param("i", $login_enabled);
+
         if (!$update_stmt->execute()) {
-            $error_message = "Failed to update site settings: " . $update_stmt->error;
+            $error_message = "Failed to update site settings: " . htmlspecialchars($update_stmt->error);
         } else {
             // Redirect after saving
             header("Location: site_settings.php");
@@ -60,83 +62,110 @@ $conn->close(); // Close the database connection
             padding: 0;
         }
 
-        h1, h2, p {
-            margin: 20px;
-        }
-
         h1 {
             font-size: 2em;
-        }
-
-        h2 {
-            font-size: 1.5em;
-        }
-
-        p {
-            font-size: 1.2em;
-        }
-
-        a {
-            color: #00bfff;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
+            margin: 20px;
         }
 
         .form-container {
             margin: 20px;
         }
 
-        input[type="text"], select {
-            padding: 10px;
-            margin: 10px 0;
-            width: 100%;
-            border: 1px solid #333;
-            background-color: #222;
-            color: #fff;
+        /* Toggle switch style */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            border-radius: 50%;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: #00bfff;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
 
         button {
             background-color: #00bfff;
             color: white;
-            padding: 8px 16px;
+            padding: 10px 20px;
+            border: none;
             border-radius: 5px;
             font-size: 1em;
-            border: none;
             cursor: pointer;
         }
 
         button:hover {
-            background-color: #0099cc;
+            background-color: #007acc;
         }
 
         .error-message {
             color: #ff4d4d;
+            margin: 20px;
+        }
+
+        a {
+            color: #00bfff;
+            text-decoration: none;
+            margin: 20px;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <h1>Site Settings</h1>
 
-    <?php if (isset($error_message)) { echo '<p class="error-message">' . $error_message . '</p>'; } ?>
+    <?php if (isset($error_message)) { ?>
+        <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
+    <?php } ?>
 
     <div class="form-container">
         <form method="POST">
-            <label for="site_name">Site Name:</label>
-            <input type="text" name="site_name" id="site_name" value="<?php echo htmlspecialchars($settings['site_name']); ?>" required>
-
-            <label for="site_theme">Site Theme:</label>
-            <select name="site_theme" id="site_theme">
-                <option value="light" <?php echo ($settings['site_theme'] == 'light') ? 'selected' : ''; ?>>Light</option>
-                <option value="dark" <?php echo ($settings['site_theme'] == 'dark') ? 'selected' : ''; ?>>Dark</option>
-            </select>
+            <label for="login_enabled" style="font-size: 1.2em;">Enable Login:</label>
+            <label class="switch">
+                <input type="checkbox" name="login_enabled" <?php echo ($settings['login_enabled'] == 1) ? 'checked' : ''; ?>>
+                <span class="slider"></span>
+            </label>
 
             <button type="submit" name="save_settings">Save Settings</button>
         </form>
     </div>
 
-    <a href="profile.php" class="button">Back to Profile</a>
+    <a href="profile.php">Back to Profile</a>
 </body>
 </html>

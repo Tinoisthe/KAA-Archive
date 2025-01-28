@@ -37,17 +37,36 @@ function log_action($user_id, $action) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['delete_user'])) {
         $user_id_to_delete = $_POST['user_id'];
-        $delete_sql = "DELETE FROM users WHERE id = ?";
-        $delete_stmt = $conn->prepare($delete_sql);
-        $delete_stmt->bind_param("i", $user_id_to_delete);
-        if (!$delete_stmt->execute()) {
-            $error_message = "Failed to delete user: " . $delete_stmt->error;
-        } else {
+
+        // Start a transaction to ensure both operations (deleting login attempts and deleting user) are atomic
+        $conn->begin_transaction();
+
+        try {
+            // Step 1: Delete associated login attempts
+            $delete_attempts_sql = "DELETE FROM login_attempts WHERE user_id = ?";
+            $stmt = $conn->prepare($delete_attempts_sql);
+            $stmt->bind_param("i", $user_id_to_delete);
+            $stmt->execute();
+
+            // Step 2: Delete the user
+            $delete_sql = "DELETE FROM users WHERE id = ?";
+            $delete_stmt = $conn->prepare($delete_sql);
+            $delete_stmt->bind_param("i", $user_id_to_delete);
+            $delete_stmt->execute();
+
+            // Commit the transaction
+            $conn->commit();
+
             // Log the action
             log_action($_SESSION['user_id'], "Deleted user ID: $user_id_to_delete at " . date('Y-m-d H:i:s'));
+
             // Redirect after successful deletion
             header("Location: manage_users.php");
             exit();
+        } catch (mysqli_sql_exception $e) {
+            // If an error occurs, roll back the transaction
+            $conn->rollback();
+            $error_message = "Error deleting user: " . $e->getMessage();
         }
     } elseif (isset($_POST['toggle_admin'])) {
         $user_id_to_toggle = $_POST['user_id'];
@@ -289,8 +308,8 @@ $conn->close(); // Close the database connection
         </tbody>
     </table>
 
-    <form action="profile.php" method="get">
-        <button type="submit" class="button">Back to Profile</button>
+    <form action="profile.php" method="GET" style="margin-top: 20px;">
+        <button type="submit" class="button">Go back to Profile</button>
     </form>
 </body>
 </html>

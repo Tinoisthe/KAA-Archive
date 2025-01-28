@@ -2,6 +2,21 @@
 // Include the database connection file
 include('db_connection.php');
 
+// Check if login is enabled
+$login_enabled = true;
+$setting_sql = "SELECT login_enabled FROM site_settings WHERE id = 1";
+$setting_result = $conn->query($setting_sql);
+
+if ($setting_result->num_rows > 0) {
+    $row = $setting_result->fetch_assoc();
+    $login_enabled = (bool) $row['login_enabled'];
+}
+
+// Redirect if login is disabled
+if (!$login_enabled) {
+    die('<h2>Registration is currently disabled by the admin.</h2><p>Please try again later.</p>');
+}
+
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form data

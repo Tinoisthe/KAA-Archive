@@ -130,6 +130,21 @@ $conn->close(); // Close the database connection
             background-color: #e04343;
         }
 
+        .home-btn {
+            background-color: #00bfff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .home-btn:hover {
+            background-color: #0099cc;
+        }
+
         .edit-form {
             margin-top: 20px;
             padding: 20px;
@@ -235,6 +250,10 @@ $conn->close(); // Close the database connection
     </div>
     <?php } ?>
 
+    <!-- Home Button -->
+    <a href="index.php" class="home-btn">Go to Home</a>
+
+    <!-- Logout Button -->
     <a href="logout.php" class="logout-btn">Logout</a>
 </body>
 </html>

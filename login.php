@@ -10,6 +10,21 @@ header('X-Content-Type-Options: nosniff');
 header('X-XSS-Protection: 1; mode=block');
 header('X-Frame-Options: DENY');
 
+// Check if login is enabled
+$login_enabled = true;
+$setting_sql = "SELECT login_enabled FROM site_settings WHERE id = 1";
+$setting_result = $conn->query($setting_sql);
+
+if ($setting_result->num_rows > 0) {
+    $row = $setting_result->fetch_assoc();
+    $login_enabled = (bool) $row['login_enabled'];
+}
+
+// Redirect or show message if login is disabled
+if (!$login_enabled) {
+    die('<h2>Login is currently disabled by the administrator.</h2><p>Please try again later.</p>');
+}
+
 // Redirect logged-in users to home page
 if (isset($_SESSION['user_id'])) {
     header("Location: index.php");
@@ -57,20 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $log_stmt->bind_param("isss", $user['id'], $username, $ip_address, $user_agent);
                 $log_stmt->execute();
 
-                // Log the login action
-                $log_action = "User logged in";
-                $log_sql = "INSERT INTO logs (user_id, action) VALUES (?, ?)";
-                $log_stmt = $conn->prepare($log_sql);
-                $log_stmt->bind_param("is", $user['id'], $log_action);
-                $log_stmt->execute();
-
-                // Capture the redirect URL (if any)
+                // Redirect to the desired page or index.php
                 $redirect_to = isset($_GET['redirect_to']) ? $_GET['redirect_to'] : 'index.php';
                 header("Location: $redirect_to");
                 exit();
             } else {
                 // Log the failed login attempt
-                $log_action = "Failed login attempt for user: $username";
                 $log_sql = "INSERT INTO login_attempts (username, ip_address, user_agent, success) 
                             VALUES (?, ?, ?, FALSE)";
                 $log_stmt = $conn->prepare($log_sql);
@@ -81,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         } else {
             // Log the failed login attempt (user does not exist)
-            $log_action = "Failed login attempt for user: $username (user does not exist)";
             $log_sql = "INSERT INTO login_attempts (username, ip_address, user_agent, success) 
                         VALUES (?, ?, ?, FALSE)";
             $log_stmt = $conn->prepare($log_sql);
