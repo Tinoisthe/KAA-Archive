@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Season 1 - Episodes</title>
+    <meta name="description" content="Watch Pokémon Season 1 - Ash's Journey Begins with Pokémon, I Choose You!">
+
+    <!-- Open Graph Meta Tags for Social Media Sharing -->
+    <meta property="og:title" content="Pokémon Season 1 - Episodes">
+    <meta property="og:description" content="Watch Pokémon Season 1, featuring Ash's adventures in the Pokémon world.">
+    <meta property="og:image" content="https://thumb.tapecontent.net/thumb/eqAlQXXV70TY0W9/Ky1m80q32qHzy7.jpg">
+    <meta property="og:url" content="https://kaa-archive.com//pokemon-season-1-episodes">
+
+    <link rel="shortcut icon" type="image/png" href="/images/logo_size_invert.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/algoliasearch-netlify-frontend@1/dist/algoliasearchNetlify.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@algolia/algoliasearch-netlify-frontend@1/dist/algoliasearchNetlify.js"></script>
+    <link href="https://unpkg.com/video.js@7/dist/video-js.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/@videojs/themes@1/dist/forest/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/1style.css">
+
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header a.logo img {
+            max-height: 50px;
+        }
+
+        .navigation {
+            list-style-type: none;
+            display: flex;
+        }
+
+        .navigation li {
+            margin-left: 15px;
+        }
+
+        .navigation a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modify the banner to take up half the screen width */
+        .banner {
+            width: 50%; /* Make the banner take 50% of the screen width */
+            max-width: 1200px; /* Optional: Limit the max width if needed */
+            margin: 20px auto; /* Center the banner horizontally */
+        }
+
+        /* Make the video take the full width of its container */
+        .banner video {
+            width: 100%;  /* Make the video take full width of the banner */
+            height: auto; /* Keep the aspect ratio */
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .buttons button:hover {
+            background-color: #45a049;
+        }
+
+        /* Season Selector Styles */
+        .season-selector {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .season-selector button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .season-selector button:hover {
+            background-color: #0b7dda;
+        }
+
+        /* Episode List Styles */
+        .episode-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            overflow-x: auto; /* Allows horizontal scrolling if needed */
+        }
+
+        .episode-list h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .episode-list button {
+            padding: 10px 15px;
+            font-size: 14px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .episode-list button:hover {
+            background-color: #45a049;
+        }
+
+        .episode-list button:focus {
+            outline: none;
+        }
+
+        /* Responsive Design for Smaller Screens */
+        @media (max-width: 768px) {
+            .episode-list button {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header with Home Button -->
+    <header>
+        <div class="buttons">
+            <button id="home-button" onclick="window.location.href='https://kaa-archive.com/'">Home</button>
+        </div>
+    </header>
+
+    <!-- Banner Section with Video.js Player -->
+    <div class="banner">
+       
+  <iframe
+    src="https://customer-096zugw79zbwa3w1.cloudflarestream.com/d167463980e79020c45276a2171a2a5e/iframe?poster=https%3A%2F%2Fcustomer-096zugw79zbwa3w1.cloudflarestream.com%2Fd167463980e79020c45276a2171a2a5e%2Fthumbnails%2Fthumbnail.jpg%3Ftime%3D%26height%3D600"
+    loading="lazy"
+    style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
+    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+    allowfullscreen="true"
+  ></iframe>
+</div>
+    </div>
+
+    <!-- Buttons to navigate episodes -->
+    <div class="buttons">
+        <button id="previous-button">Previous Episode</button>
+        <button id="next-button">Next Episode</button>
+    </div>
+
+    <!-- Season Selector -->
+    <div class="season-selector">
+        <button id="season1-button">Season 1</button>
+    </div>
+
+    <!-- Episode List (Horizontal scrolling) -->
+    <div class="episode-list">
+        <h3>Select an Episode:</h3>
+        <div id="episode-links">
+            <!-- Dynamically generated episode buttons -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Pokémon Season 1 - All Rights Reserved</p>
+    </footer>
+
+    <!-- JavaScript for Video.js Player & Next Episode -->
+    <script src="https://unpkg.com/video.js@7/dist/video.min.js"></script>
+    <script>
+        // Initialize Video.js player without CC button and subtitles
+        var player = videojs('pokemon-video', {
+            controlBar: {
+                captionsButton: false,  // Disable captions button
+                subtitleButton: false   // Disable subtitle button
+            }
+        });
+
+        // Base URL for Season 1
+        const baseUrlSeason1 = "https://desktop-2r47oct.bowfin-pike.ts.net/Pokémon/Season%201/";
+
+        // Episode Data (Episode IDs and Filenames)
+        const episodes = [
+            { number: 1, title: "POKEMON I Choose You!", filename: "Pokemon%20-%20001-1x01%20-%20POKEMON%20I%20Choose%20You%21%20%5BColdFusion%5D%5B53A16F10%5D.mp4" },
+            { number: 2, title: "POKEMON Emergency!", filename: "Pokemon%20-%20002-1x02%20-%20POKEMON%20Emergency%21%20%5BColdFusion%5D%5BB2EA5044%5D.mp4" },
+            { number: 3, title: "Ash Catches a Pokémon", filename: "Pokemon%20-%20003-1x03%20-%20Ash%20Catches%20a%20Pokemon%21.mp4" },
+            // Add more episodes here in the same format
+            { number: 4, title: "Challenge of the Samurai", filename: "Pokemon%20-%20004-1x04%20-%20Challenge%20of%20the%20Samurai.mp4" },
+            { number: 5, title: "Pokémon Emergency!", filename: "Pokemon%20-%20005-1x05%20-%20Pokemon%20Emergency!.mp4" },
+            // ... Add up to episode 79 or whatever the total number of episodes is
+        ];
+
+        // Current episode
+        let currentEpisode = 1;
+
+        // Function to generate episode URLs for Season 1 with specific filenames
+        function getEpisodeUrl(episode) {
+            const episodeData = episodes.find(ep => ep.number === episode);
+            if (episodeData) {
+                return `${baseUrlSeason1}${episodeData.filename}`;
+            }
+            return ''; // Default to empty if episode not found
+        }
+
+        // Function to load episode
+        function loadEpisode(episode) {
+            const episodeUrl = getEpisodeUrl(episode);
+            if (episodeUrl) {
+                player.src({ type: 'video/mp4', src: episodeUrl });
+                currentEpisode = episode;
+            }
+        }
+
+        // Handle Next and Previous buttons
+        document.getElementById('next-button').addEventListener('click', function () {
+            if (currentEpisode < episodes.length) {  // Max number of episodes
+                loadEpisode(currentEpisode + 1);
+            }
+        });
+
+        document.getElementById('previous-button').addEventListener('click', function () {
+            if (currentEpisode > 1) {
+                loadEpisode(currentEpisode - 1);
+            }
+        });
+
+        // Dynamically generate episode buttons
+        const episodeLinksContainer = document.getElementById('episode-links');
+        episodes.forEach(ep => {
+            const episodeButton = document.createElement('button');
+            episodeButton.textContent = `Episode ${ep.number}: ${ep.title}`;
+            episodeButton.addEventListener('click', () => loadEpisode(ep.number));
+            episodeLinksContainer.appendChild(episodeButton);
+        });
+
+        // Initial load of episode 1
+        loadEpisode(currentEpisode);
+    </script>
+
+</body>
+
+</html>
